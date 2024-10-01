@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { CommentsModule } from './comments/comments.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CommentsModule } from './comments/comments.module';
       synchronize: true,
     }),
     CommentsModule,
+    CategoryModule,
   ],
   controllers: [],
   providers: [],
