@@ -7,7 +7,6 @@ import { CategoryModule } from './category/category.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { ZoomModule } from './zoom/zoom.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
