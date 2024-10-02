@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Profile } from './profile.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
+import { Role } from '../constants/user.enum';
 
 @Entity()
 export class User {
@@ -22,6 +23,9 @@ export class User {
 
   @Column({ default: false })
   active: boolean;
+
+  @Column({ type: 'enum', enum: Role, array: true, default: [Role.USER] })
+  roles: Role[];
 
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
   @JoinColumn({ name: 'profile_id' })

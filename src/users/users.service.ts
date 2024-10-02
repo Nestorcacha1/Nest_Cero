@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { hash, compare } from 'bcryptjs';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
 import { CreateUserDto } from './Dto/useR.Dto';
-import { Profile } from './entities/profile.entity';
 import { UserUpdateDto } from './Dto/userUpdate.Dto';
-
+import { Profile } from './entities/profile.entity';
+import { User } from './entities/user.entity';
 @Injectable()
 export class UsersService {
   constructor(
@@ -32,6 +32,30 @@ export class UsersService {
     return users;
   }
 
+  async find(username: string, password: string) {
+    const user = await this.userRepository.findOne({
+      where: { username },
+      select: ['id', 'username', 'password', 'active', 'roles'],
+    });
+    if (!user) {
+      throw new NotFoundException(`User ${username} not found`);
+    }
+    const istOk = await this.passwordCompare(password, user.password);
+    if (istOk) {
+      throw new NotFoundException(`Password incorrect`);
+    }
+
+    return user;
+  }
+
+  async passwordCompare(password: string, hash: string) {
+    return compare(password, hash);
+  }
+
+  async PasswordHash(password: string) {
+    return hash(password, 10);
+  }
+
   async createUser(data: CreateUserDto) {
     const newProfile = new Profile();
     newProfile.name = data.name;
@@ -44,7 +68,7 @@ export class UsersService {
     const new_user = new User();
 
     new_user.username = data.username;
-    new_user.password = data.password;
+    new_user.password = await this.PasswordHash(data.password); // hash password
     new_user.active = true;
     new_user.profile = profileCreate;
 
@@ -63,7 +87,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User id ${id} not found`);
     }
-    await this.userRepository.delete(user);
+    await this.userRepository.delete(user.id);
     await this.profileRepository.delete(user.profile.id);
     return { message: 'User deleted' };
   }

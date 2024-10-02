@@ -4,6 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { CommentsModule } from './comments/comments.module';
 import { CategoryModule } from './category/category.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth/guard/auth.guard';
+import { ZoomModule } from './zoom/zoom.module';
 
 @Module({
   imports: [
@@ -21,8 +24,15 @@ import { CategoryModule } from './category/category.module';
     }),
     CommentsModule,
     CategoryModule,
+    AuthModule,
+    ZoomModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: 'APP_GUARD',
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
