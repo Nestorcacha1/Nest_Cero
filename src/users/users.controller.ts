@@ -9,8 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './Dto/useR.Dto';
-import { UserUpdateDto } from './Dto/userUpdate.Dto';
+import { CreateUserDto } from './dto/user.dto';
+import { UserUpdateDto } from './dto/userUpdate.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { Role } from './constants/user.enum';
